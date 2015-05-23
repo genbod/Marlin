@@ -11,14 +11,11 @@
 #ifndef _VSARDUINO_H_
 #define _VSARDUINO_H_
 #define __AVR_ATmega2560__
-#define ARDUINO 163
-#define ARDUINO_MAIN
-#define __AVR__
-#define __avr__
 #define F_CPU 16000000L
-#define __cplusplus
-#define ARDUINO_ARCH_AVR
+#define ARDUINO 163
 #define ARDUINO_AVR_MEGA2560
+#define ARDUINO_ARCH_AVR
+#define __cplusplus
 #define __inline__
 #define __asm__(x)
 #define __extension__

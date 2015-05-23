@@ -1122,6 +1122,10 @@ static void engage_z_probe() {
     #ifdef SERVO_ENDSTOPS
     if (servo_endstops[Z_AXIS] > -1) {
 #if defined (ENABLE_AUTO_BED_LEVELING) && (PROBE_SERVO_DEACTIVATION_DELAY > 0)
+		float zPosition = st_get_position_mm(Z_AXIS);
+		if (zPosition < Z_RAISE_BEFORE_RETRACTING){
+			do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] + Z_RAISE_BEFORE_RETRACTING);
+		}
         servos[servo_endstops[Z_AXIS]].attach(0);
 #endif
         servos[servo_endstops[Z_AXIS]].write(servo_endstop_angles[Z_AXIS * 2]);
@@ -1147,7 +1151,7 @@ static void retract_z_probe() {
         delay(PROBE_SERVO_DEACTIVATION_DELAY);
         servos[servo_endstops[Z_AXIS]].detach();
 
-		do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS]- Z_RAISE_BEFORE_RETRACTING);
+		//do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS]- Z_RAISE_BEFORE_RETRACTING);
 #endif
     }
     #endif
