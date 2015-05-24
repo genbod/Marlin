@@ -1124,7 +1124,7 @@ static void engage_z_probe() {
 #if defined (ENABLE_AUTO_BED_LEVELING) && (PROBE_SERVO_DEACTIVATION_DELAY > 0)
 		float zPosition = st_get_position_mm(Z_AXIS);
 		if (zPosition < Z_RAISE_BEFORE_RETRACTING){
-			do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] + Z_RAISE_BEFORE_RETRACTING);
+			do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] + (Z_RAISE_BEFORE_RETRACTING - zPosition));
 		}
         servos[servo_endstops[Z_AXIS]].attach(0);
 #endif
@@ -1811,7 +1811,13 @@ void process_commands()
             z_tmp = current_position[Z_AXIS];
 
             apply_rotation_xyz(plan_bed_level_matrix, x_tmp, y_tmp, z_tmp);         //Apply the correction sending the probe offset
-            current_position[Z_AXIS] = z_tmp - real_z + current_position[Z_AXIS];   //The difference is added to current position and sent to planner.
+			SERIAL_PROTOCOLPGM("z_tmp: ");
+			SERIAL_PROTOCOLLN(z_tmp);
+			SERIAL_PROTOCOLPGM("real_z: ");
+			SERIAL_PROTOCOLLN(real_z);
+			SERIAL_PROTOCOLPGM("current_position_Z: ");
+			SERIAL_PROTOCOLLN(current_position[Z_AXIS]);
+            current_position[Z_AXIS] = z_tmp - real_z + current_position[Z_AXIS] + Z_RAISE_BEFORE_RETRACTING;   //The difference is added to current position and sent to planner.
             plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 #ifdef Z_PROBE_SLED
             dock_sled(true, -SLED_DOCKING_OFFSET); // correct for over travel.
