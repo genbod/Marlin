@@ -1259,7 +1259,10 @@ static void homeaxis(int axis) {
     #endif
 #if defined (ENABLE_AUTO_BED_LEVELING) && (PROBE_SERVO_DEACTIVATION_DELAY > 0)
   #ifndef Z_PROBE_SLED
-    if (axis==Z_AXIS) retract_z_probe();
+	  if (axis == Z_AXIS){
+		  retract_z_probe();
+		  destination[Z_AXIS] = current_position[Z_AXIS] = -Z_RAISE_BEFORE_RETRACTING;
+	  }
   #endif
 #endif
 
